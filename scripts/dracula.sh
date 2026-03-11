@@ -41,6 +41,7 @@ main() {
   show_empty_plugins=$(get_tmux_option "@dracula-show-empty-plugins" true)
   left_pad=$(get_tmux_option "@dracula-left-pad" " ")
   right_pad=$(get_tmux_option "@dracula-right-pad" " ")
+  powerline_bg_color=$(get_tmux_option "@dracula-powerline-bg-color" "#44475a")
 
   if [ "$left_pad" = false ]; then left_pad=""; fi
   if [ "$right_pad" = false ]; then right_pad=""; fi
@@ -91,7 +92,7 @@ main() {
       window_sep_bg=${gray}
       window_sep="$show_inverse_divider"
     else
-      window_sep_fg=${gray}
+      window_sep_fg=${powerline_bg_color}
       window_sep_bg=${dark_purple}
       window_sep="$show_left_sep"
     fi
