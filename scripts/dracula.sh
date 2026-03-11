@@ -86,13 +86,13 @@ main() {
 	  window_sep="$show_inverse_divider"
 	fi
   else
-    bg_color=${gray}
+    bg_color=${powerline_bg_color}
     if $show_edge_icons; then
       window_sep_fg=${dark_purple}
       window_sep_bg=${gray}
       window_sep="$show_inverse_divider"
     else
-      window_sep_fg=${powerline_bg_color}
+      window_sep_fg=${gray}
       window_sep_bg=${dark_purple}
       window_sep="$show_left_sep"
     fi
