@@ -186,12 +186,11 @@ main() {
 
   # pane border styling
   if $show_border_contrast; then
-    tmux set-option -g pane-active-border-style "fg=${pink}"
+    tmux set-option -g pane-active-border-style "fg=${light_purple}"
   else
-    tmux set-option -g pane-active-border-style "fg=${pink}"
+    tmux set-option -g pane-active-border-style "fg=${dark_purple}"
   fi
-  tmux set-option -g pane-border-style "fg=${bright_blue}"
-  tmux set-option -g pane-border-format "#{?pane_active,#[fg=${pink}] YOU ARE HERE ,#[fg=${bright_blue}] YOU ARE NOT HERE }"
+  tmux set-option -g pane-border-style "fg=${gray}"
 
   # message styling
   tmux set-option -g message-style "bg=${gray},fg=${white}"
@@ -203,7 +202,7 @@ main() {
   if $show_powerline; then
     if $show_edge_icons; then
 
-      tmux set-option -g status-left "${left_icon}#{?client_prefix,#[bg=${bright_blue}]#[fg=${green}],#[bg=${bright_blue}]#[fg=${fg}]}${show_right_sep}#{?client_prefix, PREFIXE  ON , PREFIXE OFF }${show_left_sep} "
+      tmux set-option -g status-left "${left_icon}#{?client_prefix,#[bg=${bright_blue}]#[fg=${green}],#[bg=${bright_blue}]#[fg=${fg}]}${show_right_sep}#{?client_prefix, PREFIXE  ON ,  PREFIXE OFF }${show_left_sep} "
 
     else
       tmux set-option -g status-left "#[bg=${dark_gray}]#[fg=${green}]#[bg=${green}]#[fg=${dark_gray}]#{?client_prefix,#[bg=${yellow}],} ${left_icon} #[fg=${green}]#[bg=${bg_color}]#{?client_prefix,#[fg=${yellow}],}${left_sep}"
@@ -419,9 +418,15 @@ main() {
   done
 
   # Window option
+  if $show_powerline; then
+    tmux set-window-option -g window-status-current-format "#[fg=${window_sep_fg}]#[bg=${window_sep_bg}]${window_sep}#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} #[fg=${dark_purple}]#[bg=${bg_color}]${left_sep}"
+  else
+    tmux set-window-option -g window-status-current-format "#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} "
+  fi
 
-  tmux set-window-option -g window-status-current-format "TABS #[bg=${bright_green}]#[fg=${fg}]${show_right_sep} #I #W${show_left_sep} "
-
+  tmux set-window-option -g window-status-format "#[fg=${white}]#[bg=${bg_color}] #I #W${flags}"
+  tmux set-window-option -g window-status-activity-style "bold"
+  tmux set-window-option -g window-status-bell-style "bold"
 }
 
 # run main function
