@@ -42,6 +42,8 @@ main() {
   left_pad=$(get_tmux_option "@dracula-left-pad" " ")
   right_pad=$(get_tmux_option "@dracula-right-pad" " ")
   powerline_bg_color=$(get_tmux_option "@dracula-powerline-bg-color" "#44475a")
+  second_left_sep=$(get_tmux_option "@second_left_sep" "🌱 ")
+  second_right_sep=$(get_tmux_option "@second_right_sep" " 🌱")
 
   if [ "$left_pad" = false ]; then left_pad=""; fi
   if [ "$right_pad" = false ]; then right_pad=""; fi
@@ -80,6 +82,7 @@ main() {
   black='#191A21'
   selection='#44475A'
   comment='#6272A4'
+  pretty_green='#46A44A'
 
   # Override default colors and possibly add more
   colors="$(get_tmux_option "@dracula-colors" "")"
@@ -185,12 +188,11 @@ main() {
   tmux set-option -g status-right-length 100
 
   # pane border styling
-  if $show_border_contrast; then
-    tmux set-option -g pane-active-border-style "fg=${light_purple}"
-  else
-    tmux set-option -g pane-active-border-style "fg=${dark_purple}"
-  fi
-  tmux set-option -g pane-border-style "fg=${gray}"
+  tmux set-option -g pane-border-format "#{?pane_active,#[fg=${bright_magenta}] 🌸 YOU ARE HERE 🌸 ,#[fg=${bright_blue}] 🌸 YOU ARE NOT HERE 🌸 }"
+  tmux set -g pane-border-lines 'double'
+  tmux set -g pane-border-status 'top'
+  tmux set -g pane-border-style "fg=${bright_blue}"
+  tmux set-option -g pane-active-border-style "fg=${bright_magenta}"
 
   # message styling
   tmux set-option -g message-style "bg=${gray},fg=${white}"
@@ -198,19 +200,11 @@ main() {
   # status bar
   tmux set-option -g status-style "bg=${bg_color},fg=${white}"
 
+  # Active Window
+  tmux set-window-option -g window-status-current-format "────⭐────  🌸 #W 🌸 "
+
   # Status left
-  if $show_powerline; then
-    if $show_edge_icons; then
-
-      tmux set-option -g status-left "${left_icon}#{?client_prefix,#[bg=${bright_blue}]#[fg=${green}],#[bg=${bright_blue}]#[fg=${fg}]}${show_right_sep}#{?client_prefix, PREFIXE  ON ,  PREFIXE OFF }${show_left_sep} "
-
-    else
-      tmux set-option -g status-left "#[bg=${dark_gray}]#[fg=${green}]#[bg=${green}]#[fg=${dark_gray}]#{?client_prefix,#[bg=${yellow}],} ${left_icon} #[fg=${green}]#[bg=${bg_color}]#{?client_prefix,#[fg=${yellow}],}${left_sep}"
-    fi
-    powerbg=${bg_color}
-  else
-    tmux set-option -g status-left "#[bg=${green}]#[fg=${dark_gray}]#{?client_prefix,#[bg=${yellow}],} ${left_icon}"
-  fi
+  tmux set-option -g status-left "${left_icon}#{?client_prefix,#[bg=${bright_blue}]#[fg=${pretty_green}],#[bg=${bright_blue}]#[fg=${fg}]}#{?client_prefix, 🟢 PREFIXE  ON 🟢 , ⚪ PREFIXE OFF ⚪ } "
 
   # Status right
   tmux set-option -g status-right ""
@@ -220,7 +214,7 @@ main() {
     if case $plugin in custom:*) true ;; *) false ;; esac then
       script=${plugin#"custom:"}
       if [[ -x "${current_dir}/${script}" ]]; then
-        IFS=' ' read -r -a colors <<<$(get_tmux_option "@dracula-custom-plugin-colors" "cyan dark_gray")
+        IFS=' ' read -r -a colors <<<$(get_tmux_option "@dracula-custom-plugin-colors" "red")
         script="#($current_dir/${script})"
       else
         colors[0]="red"
@@ -417,16 +411,6 @@ main() {
 
   done
 
-  # Window option
-  if $show_powerline; then
-    tmux set-window-option -g window-status-current-format "#[fg=${window_sep_fg}]#[bg=${window_sep_bg}]${window_sep}#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} #[fg=${dark_purple}]#[bg=${bg_color}]${left_sep}"
-  else
-    tmux set-window-option -g window-status-current-format "#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} "
-  fi
-
-  tmux set-window-option -g window-status-format "#[fg=${white}]#[bg=${bg_color}] #I #W${flags}"
-  tmux set-window-option -g window-status-activity-style "bold"
-  tmux set-window-option -g window-status-bell-style "bold"
 }
 
 # run main function
